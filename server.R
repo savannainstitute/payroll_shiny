@@ -104,11 +104,11 @@ function(input, output){
 
   output$download = downloadHandler(
     filename = paste0(input$archiveName, ".zip"),
-    content = function( file){
+    content = function(file){
 
       # Set temporary working directory
-      owd <- setwd( tempdir())
-      on.exit( setwd( owd))
+      owd <- setwd(tempdir())
+      on.exit(setwd(owd))
 
       fs <- c()
       for(i in 1:length(outputFiles()$regular)) {
