@@ -71,13 +71,14 @@ function(input, output){
     salary <- salaryData()
     qsehra <- qsehraData()
     
+    withProgress(message = 'Generating payroll files', value = 0, {
     files <- allocate_payroll(gusto.raw = gusto,
                               tch.raw = tch,
                               salary.raw = salary,
                               qsehra.raw = qsehra,
                               min.date = input$MINDATE,
                               max.date = input$MAXDATE)
-
+    })
     files
     
   })

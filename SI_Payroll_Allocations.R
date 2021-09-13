@@ -43,7 +43,16 @@ allocate_payroll <- function(gusto.raw, tch.raw, salary.raw, qsehra.raw, min.dat
 
   ##### REGULAR PAYROLLS #####
   ## Create JEs
+  
+  BONUS.DATES <- gusto.bonus$check.date %>%
+    unique() %>%
+    subset(. >= min.date & . <= max.date)
+  
+  n <- length(DATES) + length(BONUS.DATES)
   for(i in 1:length(DATES)) {
+    
+    incProgress(1/n, detail = paste("Creating file", i))
+    
     d      <- DATES[i]
     d.nice <- gsub("-", "", as.character(d))
     d.col  <- which(mdy(names(payroll)) == d)
@@ -186,12 +195,11 @@ allocate_payroll <- function(gusto.raw, tch.raw, salary.raw, qsehra.raw, min.dat
 
   ##### BONUS PAYROLLS #####
   ## Create JEs
-  BONUS.DATES <- gusto.bonus$check.date %>%
-    unique() %>%
-    subset(. >= min.date & . <= max.date)
 
   if(length(BONUS.DATES) > 0) {
     for(i in 1:length(BONUS.DATES)) {
+      incProgress(1/n, detail = paste("Creating file", i))
+      
       d      <- BONUS.DATES[i]
       d.nice <- gsub("-", "", as.character(d))
 

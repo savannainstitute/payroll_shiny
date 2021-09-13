@@ -8,34 +8,31 @@ fluidPage(
   sidebarLayout(
     
     sidebarPanel(
-      fileInput('gusto', 'Choose Gusto CSV file',
+      fileInput('gusto', 'Select Gusto .csv file',
                 accept = c("csv")),
-      fileInput('tch', 'Choose TCH CSV file',
+      fileInput('tch', 'Select TCH .csv file',
                 accept = c("csv")),
-      fileInput('salary', 'Choose Salary allocation CSV file',
+      fileInput('salary', 'Select Salary allocation .csv file',
                 accept = c("csv")),
-      fileInput('qsehra', 'Choose QSEHRA CSV file',
+      fileInput('qsehra', 'Select QSEHRA .csv file',
                 accept = c("csv")),
       
-      dateInput("MINDATE", "Min date (yyyy-mm-dd):", value = "2021-01-01"),
-      dateInput("MAXDATE", "Max date (yyyy-mm-dd):", value = "2021-07-30"),
+      dateInput("MINDATE", "Select start date (yyyy-mm-dd):", value = "2021-01-01"),
+      dateInput("MAXDATE", "Select end date (yyyy-mm-dd):", value = "2021-07-30"),
       
       textInput('archiveName',"Name of .zip archive", value = "payroll"),
+      
+      downloadButton('download', "Download .zip archive of payroll files", align = "center")
       
     ),
     
     mainPanel(
       # downloadButton("downloadData", "Download")),
       tabsetPanel(
-        tabPanel("Gusto preview", tableOutput("gustoHead")), 
-        tabPanel("TCH preview", tableOutput("tchHead")),
-        tabPanel("Salary preview", tableOutput("salaryHead")),
-        tabPanel("QSEHRA preview", tableOutput("qsehraHead")),
-        
-        tabPanel("Preview of first output file", tableOutput("preview2")),
-        
-        
-        tabPanel("Download", downloadButton('download', "Download payroll files"))
+        tabPanel("Gusto file preview", tableOutput("gustoHead")), 
+        tabPanel("TCH file preview", tableOutput("tchHead")),
+        tabPanel("Salary file preview", tableOutput("salaryHead")),
+        tabPanel("QSEHRA file preview", tableOutput("qsehraHead"))
         )
       )
     )
