@@ -112,14 +112,18 @@ function(input, output){
 
       fs <- c()
       for(i in 1:length(outputFiles()$regular)) {
-        df <- outputFiles()$regular[i]
+        df <- outputFiles()$regular[[i]]
+        # df <- as.data.frame(df)
+        # colnames(df) <- sapply(strsplit(colnames(df), "."), "[", 2)
+        
+        
         path <- paste0(names(outputFiles()$regular)[i], "_PAYROLL_ALLOCATION.xlsx")
         fs <- c(fs, path)
-        xlsx::write.xlsx2(df, path, row.names = FALSE, showNA = FALSE)
+        xlsx::write.xlsx2(df, path, row.names = FALSE, showNA = FALSE, sheetName = NULL)
       }
       
       for(i in 1:length(outputFiles()$bonus)) {
-        df <- outputFiles()$bonus[i]
+        df <- outputFiles()$bonus[[i]]
         path <- paste0(names(outputFiles()$bonus)[i], "_BONUS_PAYROLL_ALLOCATION.xlsx")
         fs <- c(fs, path)
         xlsx::write.xlsx2(df, path, row.names = FALSE, showNA = FALSE)
