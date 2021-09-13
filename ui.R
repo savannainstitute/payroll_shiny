@@ -24,7 +24,7 @@ fluidPage(
       
       textInput('archiveName',"Name of .zip archive:", value = "payroll-files"),
       
-      div(style="display:inline-block;width:99%;text-align: center;", downloadButton('download', "Download .zip archive of payroll files"))
+      div(style="display:inline-block;width:99%;text-align: center;", downloadButton('download', "Download .zip archive of payroll Excel files"))
       
       
       
