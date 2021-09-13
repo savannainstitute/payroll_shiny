@@ -20,6 +20,8 @@ fluidPage(
       dateInput("MINDATE", "Select start date (yyyy-mm-dd):", value = "2021-01-01"),
       dateInput("MAXDATE", "Select end date (yyyy-mm-dd):", value = "2021-07-30"),
       
+      numericInput("rows", "Rows to preview:", 10, min = 1),
+      
       textInput('archiveName',"Name of .zip archive:", value = "payroll-files"),
       
       div(style="display:inline-block;width:99%;text-align: center;", downloadButton('download', "Download .zip archive of payroll files"))

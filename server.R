@@ -21,7 +21,7 @@ function(input, output){
     )
   })
   output$gustoHead <- renderTable({
-    head(gustoData(), 10)
+    head(gustoData(), input$rows)
   })
   
   tchData <- reactive({
@@ -36,7 +36,7 @@ function(input, output){
     )
   })
   output$tchHead <- renderTable({
-    head(tchData(), 10)
+    head(tchData(), input$rows)
   })
   
   salaryData <- reactive({
@@ -48,7 +48,7 @@ function(input, output){
     )
   })
   output$salaryHead <- renderTable({
-    head(salaryData(), 10)
+    head(salaryData(), input$rows)
   })
   
   qsehraData <- reactive({
@@ -60,7 +60,7 @@ function(input, output){
     )
   })
   output$qsehraHead <- renderTable({
-    head(qsehraData(), 10)
+    head(qsehraData(), input$rows)
   })
 
   outputFiles <- reactive({
