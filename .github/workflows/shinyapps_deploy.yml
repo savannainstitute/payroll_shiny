@@ -17,9 +17,13 @@ jobs:
         shell: Rscript {0}
         
       - name: Push to shiny.io
+        env:
+          SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
+          SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
+          SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
         run: |
-          Rscript -e "rsconnect::setAccountInfo(name='shbrainard', token=${{secrets.SHINYAPPS_TOKEN}}, secret=${{secrets.SHINYAPPS_SECRET}})"
-          Rscript -e "rsconnect::deployApp(appName = 'payroll_shiny')" 
-
+          account_info <- lapply(paste0("SHINYAPPS_", c("ACCOUNT", "TOKEN", "SECRET")), Sys.getenv)
+          do.call(rsconnect::setAccountInfo, account_info)
+          rsconnect::deployApp(appName = "payroll_shiny")
         shell: Rscript {0}
         
