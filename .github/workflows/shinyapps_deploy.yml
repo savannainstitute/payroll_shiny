@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: r-lib/actions/setup-r@master
       
-      - name: Install shiny
+      - name: Install packages
         run: |
           install.packages(c("shiny", "rsconnect", "tidyverse", "lubridate", "xlsx"), type = "binary")
         shell: Rscript {0}

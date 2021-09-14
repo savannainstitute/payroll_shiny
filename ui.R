@@ -4,7 +4,7 @@ library(shiny)
 
 
 fluidPage(
-  titlePanel("Savanna Institute Payroll-Files Generator - test2"),
+  titlePanel("Savanna Institute Payroll-Files Generator"),
   sidebarLayout(
     
     sidebarPanel(
