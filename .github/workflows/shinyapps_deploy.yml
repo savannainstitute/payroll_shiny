@@ -1,19 +1,15 @@
 on: [push]
-
 name: deploy-shiny
-
 jobs:
   deploy-shiny:
-    runs-on: macos-10.15
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
       - uses: r-lib/actions/setup-r@master
-      
       - name: Install packages
         run: |
           install.packages(c("shiny", "rsconnect", "tidyverse", "lubridate", "xlsx"), type = "binary")
         shell: Rscript {0}
-        
       - name: Push to shiny.io
         env:
           SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
@@ -24,4 +20,3 @@ jobs:
           do.call(rsconnect::setAccountInfo, account_info)
           rsconnect::deployApp(appName = "payroll_shiny")
         shell: Rscript {0}
-        
