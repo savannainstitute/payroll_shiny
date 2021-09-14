@@ -4,7 +4,7 @@ library(shiny)
 
 
 fluidPage(
-  titlePanel("Savanna Institute Payroll JE Generator"),
+  titlePanel("Savanna Institute Payroll JE Generator "),
   sidebarLayout(
     
     sidebarPanel(
