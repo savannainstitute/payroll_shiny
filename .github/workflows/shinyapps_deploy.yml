@@ -6,6 +6,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: r-lib/actions/setup-r@master
+      - name: stuff
+        run: |
+          sudo apt-get update && sudo apt-get install -y --no-install-recommends \
+            libxml2-dev libcurl4-openssl-dev
       - name: Install packages
         run: |
           install.packages(c("curl", "shiny", "rsconnect", "tidyverse", "lubridate", "xlsx"))
