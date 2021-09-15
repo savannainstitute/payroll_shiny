@@ -2,13 +2,13 @@ on: [push]
 name: deploy-shiny
 jobs:
   deploy-shiny:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: r-lib/actions/setup-r@master
       - name: Install packages
         run: |
-          install.packages(c("shiny", "rsconnect", "tidyverse", "lubridate", "xlsx"), type = "binary")
+          install.packages(c("shiny", "rsconnect", "tidyverse", "lubridate", "xlsx"))
         shell: Rscript {0}
       - name: Push to shiny.io
         env:
