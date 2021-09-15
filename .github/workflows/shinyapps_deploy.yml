@@ -8,7 +8,7 @@ jobs:
       - uses: r-lib/actions/setup-r@master
       - name: Install packages
         run: |
-          install.packages(c("shiny", "rsconnect", "tidyverse", "lubridate", "xlsx"))
+          install.packages(c("curl", shiny", "rsconnect", "tidyverse", "lubridate", "xlsx"))
         shell: Rscript {0}
       - name: Push to shiny.io
         env:
