@@ -1,50 +1,20 @@
-on: [push, pull_request]
+on: [push]
 
 name: deploy-shiny
 
 jobs:
-  CI-CD:
-    runs-on: ubuntu-latest
+  deploy-shiny:
+    runs-on: macOS-latest
     steps:
-
       - uses: actions/checkout@v2
-
       - uses: r-lib/actions/setup-r@master
-
-      - name: Query dependencies
+      
+      - name: Install packages
         run: |
-          install.packages("remotes")
-          saveRDS(remotes::dev_package_deps(dependencies = TRUE), "depends.Rds", version = 2)
+          install.packages(c("shiny", "rsconnect", "tidyverse", "lubridate", "xlsx"), type = "binary")
         shell: Rscript {0}
-
-      - name: Cache R packages
-        uses: actions/cache@v1
-        with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-r-${{ hashFiles('depends.Rds') }}
-          restore-keys: ${{ runner.os }}-r-
-
-      - name: Install system dependencies
-        env:
-          RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
-        run: |
-          Rscript -e "remotes::install_github('r-hub/sysreqs')"
-          sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
-          sudo -s eval "$sysreqs"
-          # rsconnect dependencies
-          sudo apt-get update && sudo apt-get install -y --no-install-recommends \
-            libxml2-dev libcurl4-openssl-dev
-      - name: Install dependencies
-        run: |
-          remotes::install_deps(dependencies = TRUE)
-          remotes::install_cran(c("rcmdcheck", "rsconnect", "tidyverse", "lubridate", "xlsx"))
-        shell: Rscript {0}
-
-      - name: Check
-        run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "warning", check_dir = "check")
-        shell: Rscript {0}
-
-      - name: Deploy to shinyapps.io
+        
+      - name: Push to shiny.io
         env:
           SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
           SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
