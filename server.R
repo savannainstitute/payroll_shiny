@@ -2,9 +2,7 @@ library(tidyverse)
 library(lubridate)
 library(xlsx)
 
-
 source("SI_Payroll_Allocations.R")
-
 
 function(input, output){
   output$files <- renderTable(input$gusto)
@@ -23,7 +21,7 @@ function(input, output){
   output$gustoHead <- renderTable({
     head(gustoData(), input$rows)
   })
-  
+
   tchData <- reactive({
     req(input$tch)
     ext <- tools::file_ext(input$tch$name)
@@ -32,31 +30,31 @@ function(input, output){
                           col_types = cols(),
                           skip = 1,
                           col_names = c("check.date", "last", "first", "taxable.QSEHRA", "tax.free.QSEHRA")),
-           validate("Invalid file; Please upload a .csv or .tsv file")
+           validate("Invalid file; Please upload a .csv file")
     )
   })
   output$tchHead <- renderTable({
     head(tchData(), input$rows)
   })
-  
+
   salaryData <- reactive({
     req(input$salary)
     ext <- tools::file_ext(input$salary$name)
     switch(ext,
            csv = read_csv(input$salary$datapath, col_types = cols()),
-           validate("Invalid file; Please upload a .csv or .tsv file")
+           validate("Invalid file; Please upload a .csv file")
     )
   })
   output$salaryHead <- renderTable({
     head(salaryData(), input$rows)
   })
-  
+
   qsehraData <- reactive({
     req(input$qsehra)
     ext <- tools::file_ext(input$qsehra$name)
     switch(ext,
            csv = read_csv(input$qsehra$datapath, col_types = cols()),
-           validate("Invalid file; Please upload a .csv or .tsv file")
+           validate("Invalid file; Please upload a .csv file")
     )
   })
   output$qsehraHead <- renderTable({
@@ -70,37 +68,19 @@ function(input, output){
     tch <- tchData()
     salary <- salaryData()
     qsehra <- qsehraData()
-    
+
     withProgress(message = 'Generating payroll files', value = 0, {
-    files <- allocate_payroll(gusto.raw = gusto,
-                              tch.raw = tch,
+    files <- allocate_payroll(gusto.raw  = gusto,
+                              tch.raw    = tch,
                               salary.raw = salary,
                               qsehra.raw = qsehra,
-                              min.date = input$MINDATE,
-                              max.date = input$MAXDATE)
+                              min.date   = input$MINDATE,
+                              max.date   = input$MAXDATE)
     })
     files
-    
+
   })
   output$preview2 <- renderTable(head(outputFiles()$regular[[1]], 5))
-  
-  # output$download <- downloadHandler(
-  #   filename = function() {
-  #     paste0(names(outputFiles()), "_PAYROLL_ALLOCATION.xlsx")
-  #   },
-  #   content = function(file) {
-  #     xlsx::write.xlsx2(outputFiles(), file, row.names = FALSE, showNA = FALSE)
-  #   }
-  # )
-  
-  # output$download <- downloadHandler(
-  #   filename = function() {
-  #     paste0("test.xlsx")
-  #   },
-  #   content = function(file) {
-  #     xlsx::write.xlsx2(outputFiles(), file, row.names = FALSE, showNA = FALSE)
-  #   }
-  # )
 
   output$download = downloadHandler(
     filename = paste0(input$archiveName, ".zip"),
@@ -113,15 +93,12 @@ function(input, output){
       fs <- c()
       for(i in 1:length(outputFiles()$regular)) {
         df <- outputFiles()$regular[[i]]
-        # df <- as.data.frame(df)
-        # colnames(df) <- sapply(strsplit(colnames(df), "."), "[", 2)
-        
-        
+
         path <- paste0(names(outputFiles()$regular)[i], "_PAYROLL_ALLOCATION.xlsx")
         fs <- c(fs, path)
         xlsx::write.xlsx2(df, path, row.names = FALSE, showNA = FALSE, sheetName = NULL)
       }
-      
+
       for(i in 1:length(outputFiles()$bonus)) {
         df <- outputFiles()$bonus[[i]]
         path <- paste0(names(outputFiles()$bonus)[i], "_BONUS_PAYROLL_ALLOCATION.xlsx")
@@ -133,8 +110,5 @@ function(input, output){
       zip(file, fs)
     }
   )
-  
-  
-  
-}
 
+}
