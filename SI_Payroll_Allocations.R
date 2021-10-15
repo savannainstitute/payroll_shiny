@@ -25,8 +25,10 @@ allocate_payroll <- function(gusto.raw, tch.raw, salary.raw, qsehra.raw, min.dat
     mutate(check.date = mdy(check.date))
 
   alloc_clean <- function(x) {
+    x[["Notes"]] <- NULL
+
     x %>%
-      dplyr::select(-all_of(c("Notes", "Staff Start", "Staff End", "Fund Start", "Fund End", "Match Start", "Match End"))) %>%
+      dplyr::select(-all_of(c("Staff Start", "Staff End", "Fund Start", "Fund End", "Match Start", "Match End"))) %>%
       rename(name = Name, fund = Fund, matches = Matches) %>%
       filter(!is.na(name) & !is.na(fund)) %>%
       mutate(first = purrr::map_chr(str_split(name, " "), 1),
@@ -43,16 +45,16 @@ allocate_payroll <- function(gusto.raw, tch.raw, salary.raw, qsehra.raw, min.dat
 
   ##### REGULAR PAYROLLS #####
   ## Create JEs
-  
+
   BONUS.DATES <- gusto.bonus$check.date %>%
     unique() %>%
     subset(. >= min.date & . <= max.date)
-  
+
   n <- length(DATES) + length(BONUS.DATES)
   for(i in 1:length(DATES)) {
-    
+
     incProgress(1/n, detail = paste("Creating file", i))
-    
+
     d      <- DATES[i]
     d.nice <- gsub("-", "", as.character(d))
     d.col  <- which(mdy(names(payroll)) == d)
@@ -199,7 +201,7 @@ allocate_payroll <- function(gusto.raw, tch.raw, salary.raw, qsehra.raw, min.dat
   if(length(BONUS.DATES) > 0) {
     for(i in 1:length(BONUS.DATES)) {
       incProgress(1/n, detail = paste("Creating file", i))
-      
+
       d      <- BONUS.DATES[i]
       d.nice <- gsub("-", "", as.character(d))
 
