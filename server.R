@@ -91,21 +91,27 @@ function(input, output){
       on.exit(setwd(owd))
 
       fs <- c()
-      for(i in 1:length(outputFiles()$regular)) {
-        df <- outputFiles()$regular[[i]]
-
-        path <- paste0(names(outputFiles()$regular)[i], "_PAYROLL_ALLOCATION.xlsx")
-        fs <- c(fs, path)
-        xlsx::write.xlsx2(df, path, row.names = FALSE, showNA = FALSE, sheetName = NULL)
+      
+      if(length(outputFiles()$regular) > 0){
+        for(i in 1:length(outputFiles()$regular)) {
+          df <- outputFiles()$regular[[i]] # error: Warning: Error in [[: subscript out of bounds
+          
+          path <- paste0(names(outputFiles()$regular)[i], "_PAYROLL_ALLOCATION.xlsx")
+          fs <- c(fs, path)
+          xlsx::write.xlsx2(df, path, row.names = FALSE, showNA = FALSE, sheetName = NULL)
+        }
       }
-
-      for(i in 1:length(outputFiles()$bonus)) {
-        df <- outputFiles()$bonus[[i]]
-        path <- paste0(names(outputFiles()$bonus)[i], "_BONUS_PAYROLL_ALLOCATION.xlsx")
-        fs <- c(fs, path)
-        xlsx::write.xlsx2(df, path, row.names = FALSE, showNA = FALSE)
+      
+      if(length(outputFiles()$bonus) > 0){
+        for(i in 1:length(outputFiles()$bonus)) {
+          df <- outputFiles()$bonus[[i]] # bug: doesn't name the columns w
+          path <- paste0(names(outputFiles()$bonus)[i], "_BONUS_PAYROLL_ALLOCATION.xlsx")
+          fs <- c(fs, path)
+          xlsx::write.xlsx2(df, path, row.names = FALSE, showNA = FALSE)
+        }
+        
       }
-
+     
       # Zip them up
       zip(file, fs)
     }
