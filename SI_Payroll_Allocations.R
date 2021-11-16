@@ -4,7 +4,7 @@ allocate_payroll <- function(gusto.raw, tch.raw, salary.raw, qsehra.raw, min.dat
               bonus   = list())
 
   gusto.raw <- gusto.raw %>%
-    dplyr::select(type, check.date, first, last, regular.earnings, employer.taxes) %>%
+    dplyr::select(type, check.date, name, regular.earnings, employer.taxes) %>%
     filter(!is.na(check.date)) %>%
     mutate(check.date = mdy(check.date))
 
@@ -18,6 +18,7 @@ allocate_payroll <- function(gusto.raw, tch.raw, salary.raw, qsehra.raw, min.dat
     dplyr::select(-type)
 
   TCH <- tch.raw %>%
+    select(-last, -first) %>%
     filter(!is.na(check.date)) %>%
     mutate(taxable.QSEHRA  = replace_na(taxable.QSEHRA,  0),
            tax.free.QSEHRA = replace_na(tax.free.QSEHRA, 0)) %>%
@@ -30,16 +31,14 @@ allocate_payroll <- function(gusto.raw, tch.raw, salary.raw, qsehra.raw, min.dat
     x %>%
       dplyr::select(-all_of(c("Staff Start", "Staff End", "Fund Start", "Fund End", "Match Start", "Match End"))) %>%
       rename(name = Name, fund = Fund, matches = Matches) %>%
-      filter(!is.na(name) & !is.na(fund)) %>%
-      mutate(first = purrr::map_chr(str_split(name, " "), 1),
-             last  = purrr::map_chr(str_split(name, " "), 2))
+      filter(!is.na(name) & !is.na(fund))
   }
 
   payroll <- alloc_clean(salary.raw)
   qsehra <- alloc_clean(qsehra.raw)
 
   DATES <- names(payroll) %>%
-    subset(!(. %in% c("name", "fund", "matches", "first", "last"))) %>%
+    subset(!(. %in% c("name", "fund", "matches", "Can be Match?"))) %>%
     mdy() %>%
     subset(. >= min.date & . <= max.date)
 
@@ -72,19 +71,19 @@ allocate_payroll <- function(gusto.raw, tch.raw, salary.raw, qsehra.raw, min.dat
 
     # Combine data + allocations
     p <- payroll %>%
-      dplyr::select(name, fund, matches, first, last, d.col) %>%
+      dplyr::select(name, fund, matches, d.col) %>%
       rename(percs = names(.)[ncol(.)]) %>%
       filter(!is.na(percs)) %>%
-      left_join(g, by = c("first", "last")) %>%
+      left_join(g, by = "name") %>%
       mutate(percs = as.numeric(gsub("%", "", percs)) / 100) %>%
       mutate(wages = round(percs * regular.earnings, 2),
              taxes = round(percs * employer.taxes,   2))
 
     q <- qsehra %>%
-      dplyr::select(name, fund, matches, first, last, d.col) %>%
+      dplyr::select(name, fund, matches, d.col) %>%
       rename(percs = names(.)[ncol(.)]) %>%
       filter(!is.na(percs)) %>%
-      left_join(tch, by = c("first", "last")) %>%
+      left_join(tch, by = "name") %>%
       mutate(percs = as.numeric(gsub("%", "", percs)) / 100) %>%
       mutate(taxable  = round(percs * taxable.QSEHRA,  2),
              tax.free = round(percs * tax.free.QSEHRA, 2),

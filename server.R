@@ -14,7 +14,7 @@ function(input, output){
                           col_types = cols(),
                           skip = 1,
                           col_names = c("type", "pay.period.start", "pay.period.end", "check.date", "first", "last",
-                                        "gross.earnings", "employer.taxes", "taxable.QSEHRA", "regular.earnings")),
+                                        "gross.earnings", "employer.taxes", "name", "taxable.QSEHRA", "regular.earnings")),
            validate("Invalid file; Please upload a .csv file")
     )
   })
@@ -29,7 +29,7 @@ function(input, output){
            csv = read_csv(input$tch$datapath,
                           col_types = cols(),
                           skip = 1,
-                          col_names = c("check.date", "last", "first", "taxable.QSEHRA", "tax.free.QSEHRA")),
+                          col_names = c("check.date", "last", "first", "taxable.QSEHRA", "tax.free.QSEHRA", "name")),
            validate("Invalid file; Please upload a .csv file")
     )
   })
@@ -91,17 +91,17 @@ function(input, output){
       on.exit(setwd(owd))
 
       fs <- c()
-      
+
       if(length(outputFiles()$regular) > 0){
         for(i in 1:length(outputFiles()$regular)) {
           df <- outputFiles()$regular[[i]] # error: Warning: Error in [[: subscript out of bounds
-          
+
           path <- paste0(names(outputFiles()$regular)[i], "_PAYROLL_ALLOCATION.xlsx")
           fs <- c(fs, path)
           xlsx::write.xlsx2(df, path, row.names = FALSE, showNA = FALSE, sheetName = NULL)
         }
       }
-      
+
       if(length(outputFiles()$bonus) > 0){
         for(i in 1:length(outputFiles()$bonus)) {
           df <- outputFiles()$bonus[[i]] # bug: doesn't name the columns w
@@ -109,9 +109,9 @@ function(input, output){
           fs <- c(fs, path)
           xlsx::write.xlsx2(df, path, row.names = FALSE, showNA = FALSE)
         }
-        
+
       }
-     
+
       # Zip them up
       zip(file, fs)
     }
