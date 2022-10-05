@@ -2,7 +2,7 @@ library(tidyverse)
 library(lubridate)
 library(xlsx)
 library(rdrop2)
-token <- readRDS("token.rds")
+drop_auth(rdstoken = "token.rds")
 
 # For testing
 # gusto.raw <- read_csv("/Users/boat/Repositories/payroll_shiny/input_example/Gusto.csv",
