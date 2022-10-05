@@ -1,0 +1,26 @@
+on: [push]
+
+name: deploy-shiny
+
+jobs:
+  deploy-shiny:
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: r-lib/actions/setup-r@master
+      
+      - name: Install packages
+        run: |
+          install.packages(c("shiny", "rsconnect", "tidyverse", "lubridate", "xlsx", "mailR"), type = "binary")
+        shell: Rscript {0}
+        
+      - name: Push to shiny.io
+        env:
+          SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
+          SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
+          SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
+        run: |
+          account_info <- lapply(paste0("SHINYAPPS_", c("ACCOUNT", "TOKEN", "SECRET")), Sys.getenv)
+          do.call(rsconnect::setAccountInfo, account_info)
+          rsconnect::deployApp(appName = "payroll_shiny")
+        shell: Rscript {0}
