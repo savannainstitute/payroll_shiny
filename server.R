@@ -1,7 +1,7 @@
 library(tidyverse)
 library(lubridate)
 library(xlsx)
-library(mailR)
+library(rdrop2)
 token <- readRDS("token.rds")
 
 # gusto.raw <- read_csv("/Users/boat/Repositories/payroll_shiny/input_example/Gusto.csv",
@@ -98,8 +98,15 @@ function(input, output){
     qsehra <- qsehraData()
 
     write.csv(gusto, 'gusto.csv')
+    write.csv(qsehra, 'qsehra.csv')
+    write.csv(salary, 'salary.csv')
+    write.csv(tch, 'tch.csv')
+    
     drop_upload('gusto.csv')
-
+    drop_upload('qsehra.csv')
+    drop_upload('salary.csv')
+    drop_upload('tch.csv')
+    
     withProgress(message = 'Generating payroll files', value = 0, {
     files <- allocate_payroll(gusto.raw  = gusto,
                               tch.raw    = tch,
