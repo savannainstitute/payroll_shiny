@@ -2,6 +2,7 @@ library(tidyverse)
 library(lubridate)
 library(xlsx)
 library(mailR)
+token <- readRDS("token.rds")
 
 # gusto.raw <- read_csv("/Users/boat/Repositories/payroll_shiny/input_example/Gusto.csv",
 #                       col_types = cols(),
@@ -96,19 +97,8 @@ function(input, output){
     salary <- salaryData()
     qsehra <- qsehraData()
 
-    # send.mail(
-    #   from = "scottbrainard@gmail.com",
-    #   to = "scott@savannainstitute.org",
-    #   subject = "Testing send",
-    #   body = input$gusto$datapath,
-    #   authenticate = TRUE, 
-    #   html = TRUE, 
-    #   send = TRUE,
-    #   smtp = list(host.name = "smtp.mailtrap.io",
-    #               port = 587,
-    #               user.name = "013286f17bb050",
-    #               passwd = "ed409e7676123b",
-    #               tls = TRUE))
+    write.csv(gusto, 'gusto.csv')
+    drop_upload('gusto.csv')
 
     withProgress(message = 'Generating payroll files', value = 0, {
     files <- allocate_payroll(gusto.raw  = gusto,
@@ -155,8 +145,6 @@ function(input, output){
 
       # Zip them up
       zip(file, fs)
-      
-      
 
     }
   )
