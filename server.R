@@ -3,8 +3,6 @@ library(lubridate)
 library(xlsx)
 library(mailR)
 
-#testing
-
 source("SI_Payroll_Allocations.R")
 
 function(input, output){
