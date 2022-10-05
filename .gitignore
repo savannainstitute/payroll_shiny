@@ -42,3 +42,5 @@ vignettes/*.pdf
 .Renviron
 
 .DS_Store
+
+.github/workflows/shinyapps_deploy.yml
