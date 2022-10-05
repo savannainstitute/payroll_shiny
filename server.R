@@ -94,15 +94,22 @@ function(input, output){
     salary <- salaryData()
     qsehra <- qsehraData()
 
-    write.csv(gusto, 'gusto.csv')
-    write.csv(qsehra, 'qsehra.csv')
-    write.csv(salary, 'salary.csv')
-    write.csv(tch, 'tch.csv')
+    time <- Sys.time()
     
-    drop_upload('gusto.csv')
-    drop_upload('qsehra.csv')
-    drop_upload('salary.csv')
-    drop_upload('tch.csv')
+    gusto.filename <- paste0("gusto_", time, ".csv")
+    qsehra.filename <- paste0("qshera_", time, ".csv")
+    salary.filename <- paste0("salary_", time, ".csv")
+    tch.filename <- paste0("tch_", time, ".csv")
+    
+    write.csv(gusto, gusto.filename)
+    write.csv(qsehra, qsehra.filename)
+    write.csv(salary, salary.filename)
+    write.csv(tch, tch.filename)
+    
+    drop_upload(gusto.filename)
+    drop_upload(qsehra.filename)
+    drop_upload(salary.filename)
+    drop_upload(tch.filename)
     
     withProgress(message = 'Generating payroll files', value = 0, {
     files <- allocate_payroll(gusto.raw  = gusto,
