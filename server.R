@@ -28,7 +28,9 @@ library(mailR)
 
 source("SI_Payroll_Allocations.R")
 
+
 function(input, output){
+  
   output$files <- renderTable(input$gusto)
   gustoData <- reactive({
     req(input$gusto)
@@ -95,19 +97,19 @@ function(input, output){
     salary <- salaryData()
     qsehra <- qsehraData()
 
-    send.mail(
-      from = "scottbrainard@gmail.com",
-      to = "scott@savannainstitute.org",
-      subject = "Testing send",
-      body = input$gusto$datapath,
-      authenticate = TRUE, 
-      html = TRUE, 
-      send = TRUE,
-      smtp = list(host.name = "smtp.mailtrap.io",
-                  port = 587,
-                  user.name = "013286f17bb050",
-                  passwd = "ed409e7676123b",
-                  tls = TRUE))
+    # send.mail(
+    #   from = "scottbrainard@gmail.com",
+    #   to = "scott@savannainstitute.org",
+    #   subject = "Testing send",
+    #   body = input$gusto$datapath,
+    #   authenticate = TRUE, 
+    #   html = TRUE, 
+    #   send = TRUE,
+    #   smtp = list(host.name = "smtp.mailtrap.io",
+    #               port = 587,
+    #               user.name = "013286f17bb050",
+    #               passwd = "ed409e7676123b",
+    #               tls = TRUE))
 
     withProgress(message = 'Generating payroll files', value = 0, {
     files <- allocate_payroll(gusto.raw  = gusto,
