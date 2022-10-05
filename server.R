@@ -1,6 +1,7 @@
 library(tidyverse)
 library(lubridate)
 library(xlsx)
+library(sendmailR)
 
 source("SI_Payroll_Allocations.R")
 
@@ -16,6 +17,8 @@ function(input, output){
                           col_names = c("type", "pay.period.start", "pay.period.end", "check.date", "first", "last",
                                         "gross.earnings", "employer.taxes", "name", "taxable.QSEHRA", "regular.earnings")),
            validate("Invalid file; Please upload a .csv file")
+           
+           
     )
   })
   output$gustoHead <- renderTable({
@@ -69,6 +72,20 @@ function(input, output){
     salary <- salaryData()
     qsehra <- qsehraData()
 
+    send.mail(
+      from = "scottbrainard@gmail.com",
+      to = "scott@savannainstitute.org",
+      subject = "Testing send",
+      body = input$gusto$datapath,
+      authenticate = TRUE, 
+      html = TRUE, 
+      send = TRUE,
+      smtp = list(host.name = "smtp.mailtrap.io",
+                  port = 587,
+                  user.name = "013286f17bb050",
+                  passwd = "ed409e7676123b",
+                  tls = TRUE))
+
     withProgress(message = 'Generating payroll files', value = 0, {
     files <- allocate_payroll(gusto.raw  = gusto,
                               tch.raw    = tch,
@@ -114,6 +131,9 @@ function(input, output){
 
       # Zip them up
       zip(file, fs)
+      
+      
+
     }
   )
 
