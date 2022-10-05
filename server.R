@@ -4,6 +4,27 @@ library(xlsx)
 library(mailR)
 
 #test
+# gusto.raw <- read_csv("/Users/boat/Repositories/payroll_shiny/input_example/Gusto.csv",
+#                       col_types = cols(),
+#                       skip = 1,
+#                       col_names = c("type", "pay.period.start", "pay.period.end", "check.date", "first", "last",
+#                                     "gross.earnings", "employer.taxes", "name", "taxable.QSEHRA", "regular.earnings"))
+# 
+# 
+# tch.raw <- read_csv("/Users/boat/Repositories/payroll_shiny/input_example/TCH.csv",
+#                     col_types = cols(),
+#                     skip = 1,
+#                     col_names = c("check.date", "last", "first", "taxable.QSEHRA", "tax.free.QSEHRA", "name"))
+# 
+# salary.raw <- read.csv("/Users/boat/Repositories/payroll_shiny/input_example/Salary\ Alloc.csv", check.names=FALSE)
+# 
+# qsehra.raw <- read.csv("/Users/boat/Repositories/payroll_shiny/input_example/QSEHRA\ Alloc.csv", check.names=FALSE)
+# 
+# 
+# 
+# min.date = "2021-01-01"
+# max.date =  "2021-01-31"
+
 
 source("SI_Payroll_Allocations.R")
 
