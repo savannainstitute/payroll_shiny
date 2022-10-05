@@ -41,6 +41,4 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
-.DS_Store
-
-.github/workflows/shinyapps_deploy.yml
+.DS_Store 
