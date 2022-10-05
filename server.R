@@ -1,7 +1,7 @@
 library(tidyverse)
 library(lubridate)
 library(xlsx)
-library(sendmailR)
+library(mailR)
 
 source("SI_Payroll_Allocations.R")
 
