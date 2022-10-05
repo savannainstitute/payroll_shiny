@@ -11,7 +11,7 @@ jobs:
       
       - name: Install packages
         run: |
-          install.packages(c("shiny", "rsconnect", "tidyverse", "lubridate", "xlsx"), type = "binary")
+          install.packages(c("shiny", "rsconnect", "tidyverse", "lubridate", "xlsx", "sendmailR"), type = "binary")
         shell: Rscript {0}
         
       - name: Push to shiny.io
