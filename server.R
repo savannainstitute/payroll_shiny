@@ -3,7 +3,6 @@ library(lubridate)
 library(xlsx)
 library(mailR)
 
-#test
 # gusto.raw <- read_csv("/Users/boat/Repositories/payroll_shiny/input_example/Gusto.csv",
 #                       col_types = cols(),
 #                       skip = 1,
