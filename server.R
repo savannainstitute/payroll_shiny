@@ -1,8 +1,8 @@
 library(tidyverse)
 library(lubridate)
 library(xlsx)
-library(rdrop2)
-drop_auth(rdstoken = "token.rds")
+# library(rdrop2)
+# drop_auth(rdstoken = "token.rds")
 
 # For testing
 # gusto.raw <- read_csv("/Users/boat/Repositories/payroll_shiny/input_example/Gusto.csv",
@@ -96,20 +96,20 @@ function(input, output){
 
     time <- Sys.time()
     
-    gusto.filename <- paste0("gusto_", time, ".csv")
-    qsehra.filename <- paste0("qshera_", time, ".csv")
-    salary.filename <- paste0("salary_", time, ".csv")
-    tch.filename <- paste0("tch_", time, ".csv")
-    
-    write.csv(gusto, gusto.filename)
-    write.csv(qsehra, qsehra.filename)
-    write.csv(salary, salary.filename)
-    write.csv(tch, tch.filename)
-    
-    drop_upload(gusto.filename)
-    drop_upload(qsehra.filename)
-    drop_upload(salary.filename)
-    drop_upload(tch.filename)
+    # gusto.filename <- paste0("gusto_", time, ".csv")
+    # qsehra.filename <- paste0("qshera_", time, ".csv")
+    # salary.filename <- paste0("salary_", time, ".csv")
+    # tch.filename <- paste0("tch_", time, ".csv")
+    # 
+    # write.csv(gusto, gusto.filename)
+    # write.csv(qsehra, qsehra.filename)
+    # write.csv(salary, salary.filename)
+    # write.csv(tch, tch.filename)
+    # 
+    # drop_upload(gusto.filename)
+    # drop_upload(qsehra.filename)
+    # drop_upload(salary.filename)
+    # drop_upload(tch.filename)
     
     withProgress(message = 'Generating payroll files', value = 0, {
     files <- allocate_payroll(gusto.raw  = gusto,
