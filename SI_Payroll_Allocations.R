@@ -1,4 +1,4 @@
-allocate_payroll <- function(gusto.raw, tch.raw, salary.raw, qsehra.raw, min.date, max.date) {
+allocate_payroll <- function(gusto.raw, tch.raw, allocations.raw, min.date, max.date) {
 
   OUT <- list(regular = list(),
               bonus   = list())
@@ -9,7 +9,7 @@ allocate_payroll <- function(gusto.raw, tch.raw, salary.raw, qsehra.raw, min.dat
     mutate(check.date = mdy(check.date))
 
   gusto.bonus <- gusto.raw %>%
-    filter(type == "Bonus") %>%
+    filter(type != "Regular") %>%
     filter(regular.earnings + employer.taxes > 0) %>%
     dplyr::select(-type)
 
@@ -34,10 +34,9 @@ allocate_payroll <- function(gusto.raw, tch.raw, salary.raw, qsehra.raw, min.dat
       filter(!is.na(name) & !is.na(fund))
   }
 
-  payroll <- alloc_clean(salary.raw)
-  qsehra <- alloc_clean(qsehra.raw)
+  qsehra <- allocations <- alloc_clean(allocations.raw)
 
-  DATES <- names(payroll) %>%
+  DATES <- names(allocations) %>%
     subset(!(. %in% c("name", "fund", "matches", "Can be Match?"))) %>%
     mdy() %>%
     subset(. >= min.date & . <= max.date)
@@ -52,11 +51,11 @@ allocate_payroll <- function(gusto.raw, tch.raw, salary.raw, qsehra.raw, min.dat
   n <- length(DATES) + length(BONUS.DATES)
   for(i in 1:length(DATES)) {
 
-    incProgress(1/n, detail = paste("Creating file", i))
+    #incProgress(1/n, detail = paste("Creating file", i))
 
     d      <- DATES[i]
     d.nice <- gsub("-", "", as.character(d))
-    d.col  <- which(mdy(names(payroll)) == d)
+    d.col  <- which(mdy(names(allocations)) == d)
 
     # Filter data
     g <- gusto %>%
@@ -70,7 +69,7 @@ allocate_payroll <- function(gusto.raw, tch.raw, salary.raw, qsehra.raw, min.dat
     q.exists <- sum(tch$total.QSEHRA) > 0
 
     # Combine data + allocations
-    p <- payroll %>%
+    p <- allocations %>%
       dplyr::select(name, fund, matches, d.col) %>%
       rename(percs = names(.)[ncol(.)]) %>%
       filter(!is.na(percs)) %>%
@@ -199,7 +198,7 @@ allocate_payroll <- function(gusto.raw, tch.raw, salary.raw, qsehra.raw, min.dat
 
   if(length(BONUS.DATES) > 0) {
     for(i in 1:length(BONUS.DATES)) {
-      incProgress(1/n, detail = paste("Creating file", i))
+      #incProgress(1/n, detail = paste("Creating file", i))
 
       d      <- BONUS.DATES[i]
       d.nice <- gsub("-", "", as.character(d))

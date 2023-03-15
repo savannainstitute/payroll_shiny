@@ -12,8 +12,6 @@ fluidPage(
                 accept = c("csv")),
       fileInput('salary', 'Select Salary Allocation .csv file:',
                 accept = c("csv")),
-      fileInput('qsehra', 'Select QSEHRA Allocation .csv file:',
-                accept = c("csv")),
 
       dateInput("MINDATE", "Select start date (yyyy-mm-dd):", value = "2021-01-01"),
       dateInput("MAXDATE", "Select end date (yyyy-mm-dd):",   value = "2021-01-31"),
@@ -30,8 +28,7 @@ fluidPage(
       tabsetPanel(
         tabPanel("Gusto file preview",             tableOutput("gustoHead")),
         tabPanel("TCH file preview",               tableOutput("tchHead")),
-        tabPanel("Salary Allocation file preview", tableOutput("salaryHead")),
-        tabPanel("QSEHRA Allocation file preview", tableOutput("qsehraHead"))
+        tabPanel("Salary Allocation file preview", tableOutput("salaryHead"))
       )
     )
   )
