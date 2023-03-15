@@ -1,29 +1,8 @@
 library(tidyverse)
 library(lubridate)
 library(xlsx)
-# library(rdrop2)
-# drop_auth(rdstoken = "token.rds")
-
-# For testing
-# gusto.raw <- read_csv("/Users/boat/Repositories/payroll_shiny/input_example/Gusto.csv",
-#                       col_types = cols(),
-#                       skip = 1,
-#                       col_names = c("type", "pay.period.start", "pay.period.end", "check.date", "first", "last",
-#                                     "gross.earnings", "employer.taxes", "name", "taxable.QSEHRA", "regular.earnings"))
-# tch.raw <- read_csv("/Users/boat/Repositories/payroll_shiny/input_example/TCH.csv",
-#                     col_types = cols(),
-#                     skip = 1,
-#                     col_names = c("check.date", "last", "first", "taxable.QSEHRA", "tax.free.QSEHRA", "name"))
-# salary.raw <- read.csv("/Users/boat/Repositories/payroll_shiny/input_example/Salary\ Alloc.csv", check.names=FALSE)
-#
-#
-#
-# min.date = "2023-01-01"
-# max.date =  "2023-01-31"
-
 
 source("SI_Payroll_Allocations.R")
-
 
 function(input, output){
 
