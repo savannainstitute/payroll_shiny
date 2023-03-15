@@ -135,7 +135,7 @@ allocate_payroll <- function(gusto.raw, tch.raw, allocations.raw, min.date, max.
                     Payee   = NA, # If there are no QSEHRA payments this period, this initaites this column
                     Memo    = c(paste("Payroll Allocation", d.nice), NA, NA),
                     Account = c("5100 - Gross Wages", "5110 - Employer Payroll Taxes", "999 - Wash Account"),
-                    Fund    = "3998 - Payroll Allocation Fund",
+                    Fund    = "3198 - Payroll Allocation Fund",
                     Debit   = c(NA, NA, subtotals$wages + subtotals$taxes),
                     Credit  = c(subtotals$wages, subtotals$taxes, NA),
                     `Tags: Department` = c("Administration", "Administration", NA),
@@ -173,7 +173,7 @@ allocate_payroll <- function(gusto.raw, tch.raw, allocations.raw, min.date, max.
                      Credit  = fund.summary.q$total)
 
       JEqtop <- tibble(Account = c("5120 - Reimbursements", "5100 - Gross Wages", "999 - Wash Account"),
-                       Fund    = "3998 - Payroll Allocation Fund",
+                       Fund    = "3198 - Payroll Allocation Fund",
                        Debit   = c(NA, NA, subtotals.q$total),
                        Credit  = c(subtotals.q$tax.free, subtotals.q$taxable, NA),
                        `Tags: Department` = c("Administration", "Administration", NA),
@@ -244,7 +244,7 @@ allocate_payroll <- function(gusto.raw, tch.raw, allocations.raw, min.date, max.
                       Payee   = NA, # If there are no QSEHRA payments this period, this initaites this column
                       Memo    = c(paste("BONUS Payroll Allocation", d.nice), NA, NA),
                       Account = c("5100 - Gross Wages", "5110 - Employer Payroll Taxes", "999 - Wash Account"),
-                      Fund    = "3998 - Payroll Allocation Fund",
+                      Fund    = "3198 - Payroll Allocation Fund",
                       Debit   = c(NA, NA, subtotals$wages + subtotals$taxes),
                       Credit  = c(subtotals$wages, subtotals$taxes, NA),
                       `Tags: Department` = c("Administration", "Administration", NA),
