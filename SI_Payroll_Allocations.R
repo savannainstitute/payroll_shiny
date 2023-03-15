@@ -101,7 +101,7 @@ allocate_payroll <- function(gusto.raw, tch.raw, allocations.raw, min.date, max.
 
     # Build salary portion of JE
     for.JE <- p %>%
-      group_by(fund, matches) %>%
+      group_by(fund) %>% # matches
       summarize(wages = sum(wages, na.rm = TRUE),
                 taxes = sum(taxes, na.rm = TRUE)) %>%
       filter(wages + taxes > 0)
@@ -144,7 +144,7 @@ allocate_payroll <- function(gusto.raw, tch.raw, allocations.raw, min.date, max.
     # Build salary portion of JE
     if(q.exists) {
       for.JEq <- q %>%
-        group_by(fund, matches, name) %>%
+        group_by(fund, name) %>% # matches
         summarize(taxable  = sum(taxable,  na.rm = TRUE),
                   tax.free = sum(tax.free, na.rm = TRUE),
                   total    = sum(total,    na.rm = TRUE)) %>%
@@ -210,7 +210,7 @@ allocate_payroll <- function(gusto.raw, tch.raw, allocations.raw, min.date, max.
                taxes = round(percs * employer.taxes,   2))
 
       for.JE <- p %>%
-        group_by(fund, matches) %>%
+        group_by(fund) %>% # matches
         summarize(wages = sum(wages, na.rm = TRUE),
                   taxes = sum(taxes, na.rm = TRUE)) %>%
         filter(wages + taxes > 0)
