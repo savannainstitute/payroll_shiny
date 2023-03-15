@@ -118,14 +118,14 @@ allocate_payroll <- function(gusto.raw, tch.raw, allocations.raw, min.date, max.
     JE1 <- tibble(Account = "5100 - Gross Wages",
                   Fund    = for.JE$fund,
                   Debit   = for.JE$wages,
-                  `Tags: Program` = "Overhead",
-                  `Tags: Matches` = for.JE$matches)
+                  `Tags: Department` = "Administration",
+                  `Tags: Program`    = "Overhead")
 
     JE2 <- tibble(Account = "5110 - Employer Payroll Taxes",
                   Fund    = for.JE$fund,
                   Debit   = for.JE$taxes,
-                  `Tags: Program` = "Overhead",
-                  `Tags: Matches` = for.JE$matches)
+                  `Tags: Department` = "Administration",
+                  `Tags: Program`    = "Overhead")
 
     JE3 <- tibble(Account = "999 - Wash Account",
                   Fund    = fund.summary$fund,
@@ -138,6 +138,7 @@ allocate_payroll <- function(gusto.raw, tch.raw, allocations.raw, min.date, max.
                     Fund    = "3998 - Payroll Allocation Fund",
                     Debit   = c(NA, NA, subtotals$wages + subtotals$taxes),
                     Credit  = c(subtotals$wages, subtotals$taxes, NA),
+                    `Tags: Department` = c("Administration", "Administration", NA),
                     `Tags: Program` = c("Overhead", "Overhead", NA))
 
     # Build salary portion of JE
@@ -164,8 +165,8 @@ allocate_payroll <- function(gusto.raw, tch.raw, allocations.raw, min.date, max.
                      Debit   = for.JEq$total,
                      Payee   = for.JEq$name,
                      Note    = for.JEq$name,
-                     `Tags: Program` = "Overhead",
-                     `Tags: Matches` = for.JEq$matches)
+                     `Tags: Department` = "Administration",
+                     `Tags: Program` = "Overhead")
 
       JEq2 <- tibble(Account = "999 - Wash Account",
                      Fund    = fund.summary.q$fund,
@@ -175,19 +176,17 @@ allocate_payroll <- function(gusto.raw, tch.raw, allocations.raw, min.date, max.
                        Fund    = "3998 - Payroll Allocation Fund",
                        Debit   = c(NA, NA, subtotals.q$total),
                        Credit  = c(subtotals.q$tax.free, subtotals.q$taxable, NA),
-                       `Tags: Program` = c("Overhead", "Overhead", NA)) %>%
+                       `Tags: Department` = c("Administration", "Administration", NA),
+                       `Tags: Program`    = c("Overhead", "Overhead", NA)) %>%
         filter(is.na(Credit) | Credit > 0) # Removes subtotal of 0 if there is either no taxable or no tax-free payments
     } else {
       JEqtop <- JEq1 <- JEq2 <- tibble() # In case there are no QSEHRA payments at all this period
     }
     # Merge salary + QSEHRA portions and write out
     JE.out <- bind_rows(JEtop, JE1, JE2, JE3, JEqtop, JEq1, JEq2) %>%
-      mutate(`Tags: Location` = NA,
-             `Tags: Crop`     = NA,
-             Note             = NA) %>%
+      mutate(Note = NA) %>%
       dplyr::select(Date, Memo, Account, Fund, Payee, Note, Debit, Credit,
-             `Tags: Location`, `Tags: Crop`, `Tags: Program`, `Tags: Matches`) %>%
-      rename(`Tags: Custom` = `Tags: Matches`) %>% ## to solve Aplos JE import bug, REMOVE once bug is fixed
+             `Tags: Department`, `Tags: Program`) %>%
       as.data.frame()
 
     OUT$regular[d.nice] <- list(JE.out)
@@ -228,14 +227,14 @@ allocate_payroll <- function(gusto.raw, tch.raw, allocations.raw, min.date, max.
       JE1 <- tibble(Account = "5100 - Gross Wages",
                     Fund    = for.JE$fund,
                     Debit   = for.JE$wages,
-                    `Tags: Program` = "Overhead",
-                    `Tags: Matches` = for.JE$matches)
+                    `Tags: Department` = "Administration",
+                    `Tags: Program` = "Overhead")
 
       JE2 <- tibble(Account = "5110 - Employer Payroll Taxes",
                     Fund    = for.JE$fund,
                     Debit   = for.JE$taxes,
-                    `Tags: Program` = "Overhead",
-                    `Tags: Matches` = for.JE$matches)
+                    `Tags: Department` = "Administration",
+                    `Tags: Program` = "Overhead")
 
       JE3 <- tibble(Account = "999 - Wash Account",
                     Fund    = fund.summary$fund,
@@ -248,15 +247,13 @@ allocate_payroll <- function(gusto.raw, tch.raw, allocations.raw, min.date, max.
                       Fund    = "3998 - Payroll Allocation Fund",
                       Debit   = c(NA, NA, subtotals$wages + subtotals$taxes),
                       Credit  = c(subtotals$wages, subtotals$taxes, NA),
+                      `Tags: Department` = c("Administration", "Administration", NA),
                       `Tags: Program` = c("Overhead", "Overhead", NA))
 
       JE.out <- bind_rows(JEtop, JE1, JE2, JE3) %>%
-        mutate(`Tags: Location` = NA,
-               `Tags: Crop`     = NA,
-               Note             = NA) %>%
+        mutate(Note = NA) %>%
         dplyr::select(Date, Memo, Account, Fund, Payee, Note, Debit, Credit,
-               `Tags: Location`, `Tags: Crop`, `Tags: Program`, `Tags: Matches`) %>%
-        rename(`Tags: Custom` = `Tags: Matches`) %>% ## to solve Aplos JE import bug, REMOVE once bug is fixed
+               `Tags: Department`, `Tags: Program`) %>%
         as.data.frame()
 
       OUT$bonus[d.nice] <- list(JE.out)
