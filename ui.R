@@ -10,11 +10,11 @@ fluidPage(
                 accept = c("csv")),
       fileInput('tch', 'Select TCH .csv file:',
                 accept = c("csv")),
-      fileInput('salary', 'Select Salary Allocation .csv file:',
+      fileInput('salary', 'Select Allocations .csv file:',
                 accept = c("csv")),
 
-      dateInput("MINDATE", "Select start date (yyyy-mm-dd):", value = "2021-01-01"),
-      dateInput("MAXDATE", "Select end date (yyyy-mm-dd):",   value = "2021-01-31"),
+      dateInput("MINDATE", "Select start date (yyyy-mm-dd):", value = "2023-01-01"),
+      dateInput("MAXDATE", "Select end date (yyyy-mm-dd):",   value = "2023-01-31"),
 
       numericInput("rows", "Rows to preview:", 10, min = 1),
 
@@ -26,9 +26,9 @@ fluidPage(
 
     mainPanel(
       tabsetPanel(
-        tabPanel("Gusto file preview",             tableOutput("gustoHead")),
-        tabPanel("TCH file preview",               tableOutput("tchHead")),
-        tabPanel("Salary Allocation file preview", tableOutput("salaryHead"))
+        tabPanel("Gusto file preview",       tableOutput("gustoHead")),
+        tabPanel("TCH file preview",         tableOutput("tchHead")),
+        tabPanel("Allocations file preview", tableOutput("salaryHead"))
       )
     )
   )
