@@ -15,19 +15,18 @@ library(xlsx)
 #                     skip = 1,
 #                     col_names = c("check.date", "last", "first", "taxable.QSEHRA", "tax.free.QSEHRA", "name"))
 # salary.raw <- read.csv("/Users/boat/Repositories/payroll_shiny/input_example/Salary\ Alloc.csv", check.names=FALSE)
-# qsehra.raw <- read.csv("/Users/boat/Repositories/payroll_shiny/input_example/QSEHRA\ Alloc.csv", check.names=FALSE)
-# 
-# 
-# 
-# min.date = "2021-01-01"
-# max.date =  "2021-01-31"
+#
+#
+#
+# min.date = "2023-01-01"
+# max.date =  "2023-01-31"
 
 
 source("SI_Payroll_Allocations.R")
 
 
 function(input, output){
-  
+
   output$files <- renderTable(input$gusto)
   gustoData <- reactive({
     req(input$gusto)
@@ -39,8 +38,8 @@ function(input, output){
                           col_names = c("type", "pay.period.start", "pay.period.end", "check.date", "first", "last",
                                         "gross.earnings", "employer.taxes", "name", "taxable.QSEHRA", "regular.earnings")),
            validate("Invalid file; Please upload a .csv file")
-           
-           
+
+
     )
   })
   output$gustoHead <- renderTable({
@@ -62,7 +61,7 @@ function(input, output){
     head(tchData(), input$rows)
   })
 
-  salaryData <- reactive({
+  allocationData <- reactive({
     req(input$salary)
     ext <- tools::file_ext(input$salary$name)
     switch(ext,
@@ -71,53 +70,36 @@ function(input, output){
     )
   })
   output$salaryHead <- renderTable({
-    head(salaryData(), input$rows)
-  })
-
-  qsehraData <- reactive({
-    req(input$qsehra)
-    ext <- tools::file_ext(input$qsehra$name)
-    switch(ext,
-           csv = read_csv(input$qsehra$datapath, col_types = cols()),
-           validate("Invalid file; Please upload a .csv file")
-    )
-  })
-  output$qsehraHead <- renderTable({
-    head(qsehraData(), input$rows)
+    head(allocationData(), input$rows)
   })
 
   outputFiles <- reactive({
-    req(input$gusto, input$tch, input$salary, input$qsehra)
+    req(input$gusto, input$tch, input$salary)
 
     gusto <- gustoData()
     tch <- tchData()
-    salary <- salaryData()
-    qsehra <- qsehraData()
+    salary <- allocationData()
 
     time <- Sys.time()
-    
+
     # gusto.filename <- paste0("gusto_", time, ".csv")
-    # qsehra.filename <- paste0("qshera_", time, ".csv")
     # salary.filename <- paste0("salary_", time, ".csv")
     # tch.filename <- paste0("tch_", time, ".csv")
-    # 
+    #
     # write.csv(gusto, gusto.filename)
-    # write.csv(qsehra, qsehra.filename)
     # write.csv(salary, salary.filename)
     # write.csv(tch, tch.filename)
-    # 
+    #
     # drop_upload(gusto.filename)
-    # drop_upload(qsehra.filename)
     # drop_upload(salary.filename)
     # drop_upload(tch.filename)
-    
+
     withProgress(message = 'Generating payroll files', value = 0, {
-    files <- allocate_payroll(gusto.raw  = gusto,
-                              tch.raw    = tch,
-                              salary.raw = salary,
-                              qsehra.raw = qsehra,
-                              min.date   = input$MINDATE,
-                              max.date   = input$MAXDATE)
+    files <- allocate_payroll(gusto.raw       = gusto,
+                              tch.raw         = tch,
+                              allocations.raw = salary,
+                              min.date        = input$MINDATE,
+                              max.date        = input$MAXDATE)
     })
     files
 
